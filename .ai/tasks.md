@@ -21,9 +21,9 @@
 
 ---
 
-## Phase 2 — Authentication
+## Phase 2 — Authentication ✅ DONE
 
-4. Add authentication with Sanctum
+4. ✅ Add authentication with Sanctum
    Implement endpoints:
 
 - register
@@ -33,7 +33,7 @@
 
 Verify token flow in Postman.
 
-5. Protect Todo routes
+5. ✅ Protect Todo routes
    Require authentication for all Todo CRUD endpoints.
 
 ---
