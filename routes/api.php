@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\TodoController;
 use App\Http\Controllers\Api\AuthController;
 
 Route::prefix('v1')->group(function () {
-    
+
     // Public authentication routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
