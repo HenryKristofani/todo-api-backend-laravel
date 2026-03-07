@@ -16,12 +16,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->api(prepend: [
+            \App\Http\Middleware\ForceJsonResponse::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Handle AuthenticationException (401)
         $exceptions->render(function (AuthenticationException $e, $request) {
-            if ($request->is('api/*')) {
+            if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Unauthenticated',
