@@ -20,6 +20,4 @@ use OpenApi\Attributes as OA;
     bearerFormat: 'JWT',
     description: 'Use Bearer token from login/register response.'
 )]
-class OpenApiSpec
-{
-}
+class OpenApiSpec {}
