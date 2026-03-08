@@ -69,9 +69,9 @@ Create tests for:
 
 ---
 
-## Phase 5 — Documentation
+## Phase 5 — Documentation ✅ DONE
 
-8. Add API documentation
+8. ✅ Add API documentation
 
 Use tools like:
 

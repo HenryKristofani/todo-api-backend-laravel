@@ -6,9 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\TodoResource;
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
 class TodoQueryController extends Controller
 {
+    #[OA\Get(
+        path: '/api/v1/todos',
+        tags: ['Todos'],
+        summary: 'Get todos with pagination and filters',
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1), example: 1),
+            new OA\Parameter(name: 'completed', in: 'query', required: false, schema: new OA\Schema(type: 'string', enum: ['true', 'false', '1', '0']), example: 'true'),
+            new OA\Parameter(name: 'search', in: 'query', required: false, schema: new OA\Schema(type: 'string'), example: 'meeting'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Todos retrieved successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function index(Request $request)
     {
         $validated = $request->validate([

@@ -7,9 +7,31 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
+    #[OA\Post(
+        path: '/api/v1/register',
+        tags: ['Auth'],
+        summary: 'Register a new user',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['name', 'email', 'password', 'password_confirmation'],
+                properties: [
+                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john@example.com'),
+                    new OA\Property(property: 'password', type: 'string', example: 'password123'),
+                    new OA\Property(property: 'password_confirmation', type: 'string', example: 'password123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'User registered successfully'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -41,6 +63,26 @@ class AuthController extends Controller
         ], 201);
     }
 
+    #[OA\Post(
+        path: '/api/v1/login',
+        tags: ['Auth'],
+        summary: 'Login user and get token',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['email', 'password'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john@example.com'),
+                    new OA\Property(property: 'password', type: 'string', example: 'password123'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Login successful'),
+            new OA\Response(response: 401, description: 'Invalid credentials'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function login(Request $request)
     {
         $validated = $request->validate([
@@ -75,6 +117,16 @@ class AuthController extends Controller
         ], 200);
     }
 
+    #[OA\Post(
+        path: '/api/v1/logout',
+        tags: ['Auth'],
+        summary: 'Logout current user',
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Logout successful'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -86,6 +138,16 @@ class AuthController extends Controller
         ], 200);
     }
 
+    #[OA\Get(
+        path: '/api/v1/user',
+        tags: ['Auth'],
+        summary: 'Get authenticated user profile',
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'User retrieved successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
     public function user(Request $request)
     {
         $user = $request->user();

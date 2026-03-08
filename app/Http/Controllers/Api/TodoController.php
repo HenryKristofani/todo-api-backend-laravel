@@ -6,6 +6,7 @@ use App\Models\Todo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TodoResource;
+use OpenApi\Attributes as OA;
 
 
 class TodoController extends Controller
@@ -21,6 +22,26 @@ class TodoController extends Controller
         );
     }
 
+    #[OA\Post(
+        path: '/api/v1/todos',
+        tags: ['Todos'],
+        summary: 'Create a todo',
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['title'],
+                properties: [
+                    new OA\Property(property: 'title', type: 'string', example: 'Prepare sprint meeting'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: 'Todo created successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -36,6 +57,20 @@ class TodoController extends Controller
         );
     }
 
+    #[OA\Get(
+        path: '/api/v1/todos/{id}',
+        tags: ['Todos'],
+        summary: 'Get todo by id',
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'), example: '019cc9a0-26f9-7008-9025-b1bd546e1207'),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: 'Todo retrieved successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(response: 404, description: 'Resource not found'),
+        ]
+    )]
     public function show($id)
     {
         $todo = Todo::findOrFail($id);
@@ -47,6 +82,31 @@ class TodoController extends Controller
         );
     }
 
+    #[OA\Put(
+        path: '/api/v1/todos/{id}',
+        tags: ['Todos'],
+        summary: 'Update todo by id',
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'), example: '019cc9a0-26f9-7008-9025-b1bd546e1207'),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['title'],
+                properties: [
+                    new OA\Property(property: 'title', type: 'string', example: 'Prepare sprint retrospective'),
+                    new OA\Property(property: 'completed', type: 'boolean', example: true),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Todo updated successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(response: 404, description: 'Resource not found'),
+            new OA\Response(response: 422, description: 'Validation error'),
+        ]
+    )]
     public function update(Request $request, $id)
     {
         $todo = Todo::findOrFail($id);
@@ -65,6 +125,20 @@ class TodoController extends Controller
         );
     }
 
+    #[OA\Delete(
+        path: '/api/v1/todos/{id}',
+        tags: ['Todos'],
+        summary: 'Delete todo by id',
+        security: [['sanctum' => []]],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'), example: '019cc9a0-26f9-7008-9025-b1bd546e1207'),
+        ],
+        responses: [
+            new OA\Response(response: 204, description: 'Todo deleted successfully'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(response: 404, description: 'Resource not found'),
+        ]
+    )]
     public function destroy($id)
     {
         Todo::findOrFail($id)->delete();
