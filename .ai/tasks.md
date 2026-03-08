@@ -38,9 +38,9 @@ Verify token flow in Postman.
 
 ---
 
-## Phase 3 — API Improvements
+## Phase 3 — API Improvements ✅ DONE
 
-6. Add pagination and filtering to GET /todos
+6. ✅ Add pagination and filtering to GET /todos
 
 Support query parameters:
 
