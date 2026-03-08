@@ -56,9 +56,9 @@ GET /todos?search=meeting
 
 ---
 
-## Phase 4 — Quality
+## Phase 4 — Quality ✅ DONE
 
-7. Add API tests
+7. ✅ Add API tests
 
 Create tests for:
 
